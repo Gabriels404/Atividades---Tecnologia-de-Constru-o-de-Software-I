@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Sessões</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-3">
+  <nav class="navbar navbar-dark bg-dark mb-4">
+    <a class="navbar-brand mx-3" href="index.html">🎥 Cinema</a>
+  </nav>
+
+  <div class="container">
+    <h3>Cadastro de Sessões</h3>
+    <form id="formSessao" class="mt-3">
+      <div class="mb-2">
+        <label>Filme</label>
+        <select id="filme" class="form-select" required></select>
+      </div>
+      <div class="mb-2">
+        <label>Sala</label>
+        <select id="sala" class="form-select" required></select>
+      </div>
+      <div class="mb-2">
+        <label>Data e Hora</label>
+        <input type="datetime-local" id="dataHora" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>Preço</label>
+        <input type="number" id="preco" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>Idioma</label>
+        <select id="idioma" class="form-select">
+          <option>Dublado</option><option>Legendado</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label>Formato</label>
+        <select id="formato" class="form-select">
+          <option>2D</option><option>3D</option>
+        </select>
+      </div>
+      <button class="btn btn-primary mt-2">Salvar Sessão</button>
+    </form>
+
+    <h4 class="mt-4">Sessões Cadastradas</h4>
+    <ul id="listaSessoes" class="list-group mt-2"></ul>
+  </div>
+
+  <script>
+    const filmes = JSON.parse(localStorage.getItem("filmes")) || [];
+    const salas = JSON.parse(localStorage.getItem("salas")) || [];
+    const sessoes = JSON.parse(localStorage.getItem("sessoes")) || [];
+
+    const form = document.getElementById("formSessao");
+    const lista = document.getElementById("listaSessoes");
+    const filmeSelect = document.getElementById("filme");
+    const salaSelect = document.getElementById("sala");
+
+    filmes.forEach(f => {
+      const opt = document.createElement("option");
+      opt.textContent = f.titulo;
+      filmeSelect.appendChild(opt);
+    });
+    salas.forEach(s => {
+      const opt = document.createElement("option");
+      opt.textContent = s.nome;
+      salaSelect.appendChild(opt);
+    });
+
+    function atualizar() {
+      lista.innerHTML = "";
+      sessoes.forEach(s => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = `${s.filme} - ${s.sala} - ${s.dataHora} - R$${s.preco}`;
+        lista.appendChild(li);
+      });
+      localStorage.setItem("sessoes", JSON.stringify(sessoes));
+    }
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      sessoes.push({
+        filme: filme.value,
+        sala: sala.value,
+        dataHora: dataHora.value,
+        preco: preco.value,
+        idioma: idioma.value,
+        formato: formato.value
+      });
+      form.reset();
+      atualizar();
+    };
+
+    atualizar();
+  </script>
+</body>
+</html>

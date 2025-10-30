@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Salas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-3">
+  <nav class="navbar navbar-dark bg-dark mb-4">
+    <a class="navbar-brand mx-3" href="index.html">🎥 Cinema</a>
+  </nav>
+
+  <div class="container">
+    <h3>Cadastro de Salas</h3>
+    <form id="formSala" class="mt-3">
+      <div class="mb-2">
+        <label>Nome da Sala</label>
+        <input id="nome" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>Capacidade</label>
+        <input type="number" id="capacidade" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>Tipo</label>
+        <select id="tipo" class="form-select">
+          <option>2D</option><option>3D</option><option>IMAX</option>
+        </select>
+      </div>
+      <button class="btn btn-primary mt-2">Salvar Sala</button>
+    </form>
+
+    <h4 class="mt-4">Salas Cadastradas</h4>
+    <ul id="listaSalas" class="list-group mt-2"></ul>
+  </div>
+
+  <script>
+    const salas = JSON.parse(localStorage.getItem("salas")) || [];
+    const form = document.getElementById("formSala");
+    const lista = document.getElementById("listaSalas");
+
+    function atualizar() {
+      lista.innerHTML = "";
+      salas.forEach(s => {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = `${s.nome} - ${s.tipo} (${s.capacidade} lugares)`;
+        lista.appendChild(li);
+      });
+      localStorage.setItem("salas", JSON.stringify(salas));
+    }
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      salas.push({ nome: nome.value, capacidade: capacidade.value, tipo: tipo.value });
+      form.reset();
+      atualizar();
+    };
+
+    atualizar();
+  </script>
+</body>
+</html>
